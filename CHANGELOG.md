@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v6.42.0 (2026-04-28)
+
+### Feature
+
+* feat: prefetch LLM activation batches in a background thread (#674) ([`a89ca50`](https://github.com/decoderesearch/SAELens/commit/a89ca5001e8ec5e72a3bd2be7fad4b7b85effbd9))
+
 ## v6.41.2 (2026-04-27)
 
 ### Fix
