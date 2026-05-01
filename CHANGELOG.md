@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v6.43.0 (2026-05-01)
+
+### Feature
+
+* feat: add Qwen Scope TopK SAEs (#677) ([`8e8fc2c`](https://github.com/decoderesearch/SAELens/commit/8e8fc2ce002086645aebc420e530d077396a114f))
+
 ## v6.42.0 (2026-04-28)
 
 ### Feature
