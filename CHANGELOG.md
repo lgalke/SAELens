@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## v6.44.2 (2026-05-27)
+
+### Fix
+
+* fix: extract_layer_from_tlens_hook_name handles trailing-int hook names (#680)
+
+The regex required a trailing `.` after the layer index, so HF-style
+named-module paths like `model.language_model.layers.30` (where the
+index is the final segment) returned None. That silently disabled
+`stop_at_layer` early-exit in ActivationsStore for HF models, running
+every layer after the hook layer and wasting both FLOPs and KV-cache
+memory.
+
+Loosen the regex to also match `.&lt;int&gt;` at end of string. ([`703c021`](https://github.com/decoderesearch/SAELens/commit/703c0212cea952bf16f92ea3979b3706965f15eb))
+
 ## v6.44.1 (2026-05-27)
 
 ### Fix
