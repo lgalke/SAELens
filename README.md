@@ -50,7 +50,7 @@ The new v6 update is a major refactor to SAELens and changes the way training co
 
 ## Join the Slack!
 
-Feel free to join the [Open Source Mechanistic Interpretability Slack](https://join.slack.com/t/opensourcemechanistic/shared_invite/zt-375zalm04-GFd5tdBU1yLKlu_T_JSqZQ) for support!
+Feel free to join the [Open Source Mechanistic Interpretability Slack](https://join.slack.com/t/opensourcemechanistic/shared_invite/zt-3z9o0hxjl-MDX9pbATO2qESOazNDLpdQ) for support!
 
 ## Other SAE Projects
 
