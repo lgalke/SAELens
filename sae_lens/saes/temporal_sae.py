@@ -301,7 +301,8 @@ class TemporalSAE(SAE[TemporalSAEConfig]):
             x_residual = x_residual - proj_scale * Dz_pred_
 
         # Encode residual (novel part) with sparse SAE
-        z_novel = F.relu(torch.matmul(x_residual * self.lam, W_enc))
+        hidden_pre = self.hook_sae_acts_pre(torch.matmul(x_residual * self.lam, W_enc))
+        z_novel = F.relu(hidden_pre)
         if self.cfg.sae_diff_type == "topk":
             kval = self.cfg.kval_topk
             if kval is not None:
@@ -309,6 +310,7 @@ class TemporalSAE(SAE[TemporalSAEConfig]):
                 mask = torch.zeros_like(z_novel)
                 mask.scatter_(-1, topk_indices, 1)
                 z_novel = z_novel * mask
+        z_novel = self.hook_sae_acts_post(z_novel)
 
         # Return novel codes (the interpretable features) and predicted codes
         return z_novel, z_pred
