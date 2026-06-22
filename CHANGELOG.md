@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## v6.44.4 (2026-06-22)
+
+### Fix
+
+* fix: TemporalSAE don&#39;t apply decoding bias if weights are tied and bias wasn&#39;t applied at encoding (#703) ([`0e3ca58`](https://github.com/decoderesearch/SAELens/commit/0e3ca58bdf28587a8614d658ede7ef5778f8a7b6))
+
+### Test
+
+* test: Verify TemporalSAE applies b_dec only when untied or applied at input
+
+PR #703 fixed TemporalSAE to fold b_dec back in at decode/forward only when
+the weights are untied or apply_b_dec_to_input is set. The existing tests
+only assert output shapes and run with b_dec zero-initialized, so they pass
+regardless of whether b_dec is applied. Add tests that set b_dec to a nonzero
+value and assert it is applied exactly in those cases, covering both decode()
+and forward().
+
+Co-Authored-By: Claude Opus 4.8 (1M context) &lt;noreply@anthropic.com&gt; ([`398815f`](https://github.com/decoderesearch/SAELens/commit/398815fda145d7920ad956e49b5ff3ddea9b05c3))
+
 ## v6.44.3 (2026-06-16)
 
 ### Chore
