@@ -98,6 +98,61 @@ def test_TemporalSAE_decode(tied_weights: bool, apply_b_dec_to_input: bool):
     assert reconstruction.shape == (batch_size, seq_len, cfg.d_in)
 
 
+@pytest.mark.parametrize("tied_weights", [True, False])
+@pytest.mark.parametrize("apply_b_dec_to_input", [True, False])
+def test_TemporalSAE_decode_applies_b_dec_only_when_appropriate(
+    tied_weights: bool, apply_b_dec_to_input: bool
+):
+    cfg = build_temporal_sae_cfg(
+        tied_weights=tied_weights,
+        apply_b_dec_to_input=apply_b_dec_to_input,
+        dtype="float32",
+        normalize_activations="none",
+    )
+    sae = TemporalSAE.from_dict(cfg.to_dict())
+    # b_dec is zero-initialized, so a nonzero value is needed to make whether it
+    # is folded back into the output observable.
+    with torch.no_grad():
+        sae.b_dec.copy_(torch.randn_like(sae.b_dec))
+
+    novel_codes = torch.randn(4, 16, cfg.d_sae).relu()
+    reconstruction = sae.decode(novel_codes)
+    without_bias = novel_codes @ sae.W_dec
+
+    # b_dec is only added back when the weights are untied, or when it was
+    # subtracted from the input at encoding time (apply_b_dec_to_input).
+    if not tied_weights or apply_b_dec_to_input:
+        assert_close(reconstruction, without_bias + sae.b_dec)
+    else:
+        assert_close(reconstruction, without_bias)
+
+
+@pytest.mark.parametrize("tied_weights", [True, False])
+@pytest.mark.parametrize("apply_b_dec_to_input", [True, False])
+def test_TemporalSAE_forward_applies_b_dec_only_when_appropriate(
+    tied_weights: bool, apply_b_dec_to_input: bool
+):
+    cfg = build_temporal_sae_cfg(
+        tied_weights=tied_weights,
+        apply_b_dec_to_input=apply_b_dec_to_input,
+        dtype="float32",
+        normalize_activations="none",
+    )
+    sae = TemporalSAE.from_dict(cfg.to_dict())
+    with torch.no_grad():
+        sae.b_dec.copy_(torch.randn_like(sae.b_dec))
+
+    x = torch.randn(4, 16, cfg.d_in)
+    # encode_with_predictions is deterministic, so recomputing it reproduces the
+    # codes forward() decodes internally.
+    z_novel, z_pred = sae.encode_with_predictions(x)
+    expected = (z_novel + z_pred) @ sae.W_dec
+    if not tied_weights or apply_b_dec_to_input:
+        expected = expected + sae.b_dec
+
+    assert_close(sae.forward(x), expected)
+
+
 @pytest.mark.parametrize("sae_diff_type", ["relu", "topk"])
 def test_TemporalSAE_sae_diff_type(sae_diff_type: str):
     cfg = build_temporal_sae_cfg(
