@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## v6.45.0 (2026-07-03)
+
+### Chore
+
+* chore: Document fine tuning existing SAEs (#709) ([`d29fd78`](https://github.com/decoderesearch/SAELens/commit/d29fd78fe08c9a2ab406202f840e1345a3c16298))
+
+* chore: Add pytest-profiling dependency, required by some tests (#687)
+
+Required for pytest --profile-svg to work, as instructed for example in benchmark/test_cache_activations_runner.py
+
+Co-authored-by: David Chanin &lt;chanindav@gmail.com&gt; ([`ccdfbe5`](https://github.com/decoderesearch/SAELens/commit/ccdfbe5dda0ad455e5b4620ffededa2769190113))
+
+* chore: DRY fold decoder norms logic (#705) ([`40e5857`](https://github.com/decoderesearch/SAELens/commit/40e5857bfc650f6a1bf8e2a72fa8cfc7a5efa984))
+
+### Feature
+
+* feat: add exclude_special_tokens to HookedSAETransformer (#708) ([`0e64dee`](https://github.com/decoderesearch/SAELens/commit/0e64dee5fc8ea261060ece13d2aa0596c725d7c2))
+
 ## v6.44.4 (2026-06-22)
 
 ### Fix
