@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v6.45.1 (2026-07-03)
+
+### Fix
+
+* fix: bug in explained_variance computing variance relative to zero instead of mean (#665) ([`4d7f530`](https://github.com/decoderesearch/SAELens/commit/4d7f530d88e7fa7413d04daf7c7270f39c07d11b))
+
 ## v6.45.0 (2026-07-03)
 
 ### Chore
