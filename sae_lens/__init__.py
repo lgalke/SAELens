@@ -9,6 +9,10 @@ from sae_lens.saes import (
     SAE,
     BatchTopKTrainingSAE,
     BatchTopKTrainingSAEConfig,
+    DiscreteSAE,
+    DiscreteSAEConfig,
+    DiscreteTrainingSAE,
+    DiscreteTrainingSAEConfig,
     GatedSAE,
     GatedSAEConfig,
     GatedTrainingSAE,
@@ -112,6 +116,10 @@ __all__ = [
     "LoggingConfig",
     "BatchTopKTrainingSAE",
     "BatchTopKTrainingSAEConfig",
+    "DiscreteSAE",
+    "DiscreteSAEConfig",
+    "DiscreteTrainingSAE",
+    "DiscreteTrainingSAEConfig",
     "Transcoder",
     "TranscoderConfig",
     "SkipTranscoder",
@@ -153,6 +161,8 @@ register_sae_class("gated", GatedSAE, GatedSAEConfig)
 register_sae_training_class("gated", GatedTrainingSAE, GatedTrainingSAEConfig)
 register_sae_class("topk", TopKSAE, TopKSAEConfig)
 register_sae_training_class("topk", TopKTrainingSAE, TopKTrainingSAEConfig)
+register_sae_class("discrete", DiscreteSAE, DiscreteSAEConfig)
+register_sae_training_class("discrete", DiscreteTrainingSAE, DiscreteTrainingSAEConfig)
 register_sae_class("jumprelu", JumpReLUSAE, JumpReLUSAEConfig)
 register_sae_training_class("jumprelu", JumpReLUTrainingSAE, JumpReLUTrainingSAEConfig)
 register_sae_training_class(

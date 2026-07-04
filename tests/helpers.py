@@ -9,6 +9,7 @@ from transformer_lens import HookedTransformer
 from sae_lens.config import LanguageModelSAERunnerConfig, LoggingConfig
 from sae_lens.registry import SAE_TRAINING_CLASS_REGISTRY
 from sae_lens.saes.batchtopk_sae import BatchTopKTrainingSAEConfig
+from sae_lens.saes.discrete_sae import DiscreteSAEConfig, DiscreteTrainingSAEConfig
 from sae_lens.saes.gated_sae import GatedSAEConfig, GatedTrainingSAEConfig
 from sae_lens.saes.jumprelu_sae import JumpReLUSAEConfig, JumpReLUTrainingSAEConfig
 from sae_lens.saes.matching_pursuit_sae import (
@@ -38,6 +39,7 @@ ALL_ARCHITECTURES = [
     "topk",
     "temporal",
     "matching_pursuit",
+    "discrete",
 ]
 ALL_FOLDABLE_ARCHITECTURES = [
     "standard",
@@ -148,6 +150,8 @@ class TrainingSAEConfigDict(TypedDict, total=False):
     residual_threshold: float  # for MatchingPursuitSAE
     max_iterations: int | None  # for MatchingPursuitSAE
     stop_on_duplicate_support: bool  # for MatchingPursuitSAE
+    decoder_bits: float | None  # For Discrete
+    code_bits: float | None  # For Discrete
 
 
 class SAEConfigDict(TypedDict, total=False):
@@ -161,6 +165,8 @@ class SAEConfigDict(TypedDict, total=False):
     residual_threshold: float  # for matching pursuit
     max_iterations: int | None  # for MatchingPursuitSAE
     stop_on_duplicate_support: bool  # for MatchingPursuitSAE
+    decoder_bits: float | None  # For Discrete
+    code_bits: float | None  # For Discrete
 
 
 # Helper to create the base runner config (reused by specific builders)
@@ -466,6 +472,63 @@ def build_topk_sae_training_cfg(**kwargs: Any) -> TopKTrainingSAEConfig:
     return build_topk_runner_cfg(**kwargs).sae  # type: ignore
 
 
+# --- Discrete SAE Builder ---
+def build_discrete_runner_cfg(
+    **kwargs: Any,
+) -> LanguageModelSAERunnerConfig[DiscreteTrainingSAEConfig]:
+    """Helper to create a mock instance for Discrete SAE.
+
+    `decoder_bits`/`code_bits` default to None (full precision), so that a default-built
+    DiscreteTrainingSAE is behaviorally identical to a TopKTrainingSAE (same default
+    `rescale_acts_by_decoder_norm=True` as TopK's own builder) for the generic
+    cross-architecture tests in tests/saes/test_sae.py.
+    """
+    default_sae_config: TrainingSAEConfigDict = {
+        "d_in": 64,
+        "d_sae": 256,
+        "dtype": "float32",
+        "device": "cpu",
+        "normalize_activations": "none",
+        "decoder_init_norm": 0.1,
+        "apply_b_dec_to_input": False,
+        "k": 10,
+        "rescale_acts_by_decoder_norm": True,
+        "decoder_bits": None,
+        "code_bits": None,
+    }
+    temp_sae_overrides = {
+        k: v for k, v in kwargs.items() if k in TrainingSAEConfigDict.__annotations__
+    }
+    temp_sae_config = {**default_sae_config, **temp_sae_overrides}
+    final_default_sae_config = cast(dict[str, Any], temp_sae_config)
+
+    runner_cfg = _build_runner_config(
+        DiscreteTrainingSAEConfig,
+        final_default_sae_config,
+        **kwargs,
+    )
+    _update_sae_metadata(runner_cfg)
+    return runner_cfg
+
+
+def build_discrete_sae_cfg(**kwargs: Any) -> DiscreteSAEConfig:
+    default_sae_config: SAEConfigDict = {
+        "k": 100,
+        "d_in": 64,
+        "d_sae": 256,
+        "dtype": "float32",
+        "device": "cpu",
+        "normalize_activations": "none",
+        "decoder_bits": None,
+        "code_bits": None,
+    }
+    return DiscreteSAEConfig(**{**default_sae_config, **kwargs})  # type: ignore
+
+
+def build_discrete_sae_training_cfg(**kwargs: Any) -> DiscreteTrainingSAEConfig:
+    return build_discrete_runner_cfg(**kwargs).sae  # type: ignore
+
+
 # --- Matching Pursuit SAE Builder ---
 
 
@@ -750,6 +813,7 @@ SAE_TRAINING_CONFIG_BUILDERS = {
     "batchtopk": build_batchtopk_sae_training_cfg,
     "matryoshka_batchtopk": build_matryoshka_batchtopk_sae_training_cfg,
     "matching_pursuit": build_matching_pursuit_sae_training_cfg,
+    "discrete": build_discrete_sae_training_cfg,
 }
 
 SAE_CONFIG_BUILDERS = {
@@ -759,6 +823,7 @@ SAE_CONFIG_BUILDERS = {
     "topk": build_topk_sae_cfg,
     "temporal": build_temporal_sae_cfg,
     "matching_pursuit": build_matching_pursuit_sae_cfg,
+    "discrete": build_discrete_sae_cfg,
 }
 
 SAE_RUNNER_CONFIG_BUILDERS = {
@@ -769,4 +834,5 @@ SAE_RUNNER_CONFIG_BUILDERS = {
     "batchtopk": build_batchtopk_runner_cfg,
     "matryoshka_batchtopk": build_matryoshka_batchtopk_runner_cfg,
     "matching_pursuit": build_matching_pursuit_runner_cfg,
+    "discrete": build_discrete_runner_cfg,
 }

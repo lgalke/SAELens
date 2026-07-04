@@ -74,6 +74,11 @@ from sae_lens.synthetic.hierarchy import (
     hierarchy_modifier,
 )
 from sae_lens.synthetic.initialization import init_sae_to_match_feature_dict
+from sae_lens.synthetic.null_activations import (
+    GaussianNullGenerator,
+    batch_iterator,
+    shuffled_null_sampler,
+)
 from sae_lens.synthetic.plotting import (
     find_best_feature_ordering,
     find_best_feature_ordering_across_saes,
@@ -196,4 +201,8 @@ __all__ = [
     "plot_sae_feature_similarity",
     # HuggingFace utilities
     "upload_synthetic_model_to_huggingface",
+    # Covariance-matched null activations
+    "GaussianNullGenerator",
+    "shuffled_null_sampler",
+    "batch_iterator",
 ]

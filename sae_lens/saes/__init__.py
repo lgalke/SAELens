@@ -2,6 +2,12 @@ from .batchtopk_sae import (
     BatchTopKTrainingSAE,
     BatchTopKTrainingSAEConfig,
 )
+from .discrete_sae import (
+    DiscreteSAE,
+    DiscreteSAEConfig,
+    DiscreteTrainingSAE,
+    DiscreteTrainingSAEConfig,
+)
 from .gated_sae import (
     GatedSAE,
     GatedSAEConfig,
@@ -72,6 +78,10 @@ __all__ = [
     "TopKTrainingSAEConfig",
     "BatchTopKTrainingSAE",
     "BatchTopKTrainingSAEConfig",
+    "DiscreteSAE",
+    "DiscreteSAEConfig",
+    "DiscreteTrainingSAE",
+    "DiscreteTrainingSAEConfig",
     "Transcoder",
     "TranscoderConfig",
     "SkipTranscoder",
