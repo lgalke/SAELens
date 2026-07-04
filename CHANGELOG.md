@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v6.45.3 (2026-07-04)
+
+### Fix
+
+* fix: Add missing calls to reshape_fn_out() in TemporalSAE (#695) ([`095d280`](https://github.com/decoderesearch/SAELens/commit/095d280dc0b98c1277a4387867f3c6ac6e970ab3))
+
 ## v6.45.2 (2026-07-04)
 
 ### Fix
