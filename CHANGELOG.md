@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v6.45.2 (2026-07-04)
+
+### Fix
+
+* fix: mse eval metric scaled inversely with eval batch token count (#711) ([`09ec191`](https://github.com/decoderesearch/SAELens/commit/09ec191058fe0f7c5f6850372a7f79e002dbeae3))
+
+* fix: remove ignored resume_from_checkpoint param from LLM runner (#712) ([`2c54b63`](https://github.com/decoderesearch/SAELens/commit/2c54b63b209a9b8119ece54d673e98e9095308ea))
+
 ## v6.45.1 (2026-07-03)
 
 ### Fix
